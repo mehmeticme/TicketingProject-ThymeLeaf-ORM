@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: header"></head>
+
+<body>
+
+<div class="dashboard-main-wrapper">
+
+    <div th:replace="/fragments/header :: header"></div>
+
+    <div th:replace="/fragments/left-sidebar :: left-sidebar"></div>
+
+    <div class="dashboard-wrapper">
+
+        <div class="dashboard-admin">
+            <div class="container-fluid dashboard-content">
+
+                <div class="admin-widget">
+                    <h2>Project Create</h2>
+                    <div class="row">
+                        <form th:action="@{/project/create}" method="post" th:object="${project}"
+                              class="col-6 needs-validation" novalidate>
+
+                            <div class="form-group">
+                                <label for="projectName">Project Name</label>
+                                <input type="text" class="form-control mb-2" id="projectName" th:field="*{projectName}"
+                                       placeholder="Enter your project name" required>
+                                <div class="invalid-feedback">
+                                    Please enter Project Name
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="projectCode">Project Code</label>
+                                <input type="text" class="form-control mb-2" id="projectCode" th:field="*{projectCode}"
+                                       placeholder="enter your project code" required>
+                                <div class="invalid-feedback">
+                                    Please enter Project Code
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Assigned Manager</label>
+                                <select th:field="*{assignedManager}" class="custom-select" required="required">
+                                    <option th:value="''" th:text="Select"></option>
+                                    <option th:each="manager : ${managers}" th:text="${manager.firstName+ ' ' + manager.lastName}" th:value="${manager.username}"></option>
+
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please choose Manager
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Project Start Date</label>
+                                        <input type="date" th:field="*{startDate}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Project End Date</label>
+                                        <input type="date" th:field="*{endDate}" class="form-control">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="projectDetail">Project Detail</label>
+                                <br>
+                                <textarea th:field="*{projectDetail}" class="col-12" style="height: 90px" id="projectDetail"></textarea>
+                            </div>
+
+
+                            <div class="row" style="height: 100px">
+                                <div class="col">
+                                    <button style="margin-top: 30px" type="submit" class="btn btn-primary">Save</button>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <h2>Project List</h2>
+                    <div class="row">
+
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Project Code</th>
+                                            <th scope="col">Project Name</th>
+                                            <th scope="col">Start/End Date</th>
+                                            <th scope="col">Manager</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="project : ${projects}">
+                                            <td th:text="${project.projectCode}"></td>
+                                            <td th:text="${project.projectName}"></td>
+                                            <td th:text="${#temporals.format(project.startDate,'MM.dd.yyyy')+ ' - '+ #temporals.format(project.endDate,'MM.dd.yyyy')}"></td>
+                                            <td th:text="${project.assignedManager.firstName+' '+project.assignedManager.lastName}"></td>
+                                            <td th:text="${project.projectStatus}"></td>
+
+                                            <td>
+                                                <a th:href="@{/project/update/{id}(id=${project.projectCode})}" class="btn btn-warning active">Update</a>
+                                                <a th:href="@{/project/delete/{id}(id=${project.projectCode})}" class="btn btn btn-danger active">Delete</a>
+                                                <a th:href="@{/project/complete/{id}(id=${project.projectCode})}" class="btn btn-info active">Complete</a>
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div th:replace="/fragments/footer :: footer"></div>
+
+</div>
+
+<div th:replace="/fragments/javascript :: js"></div>
+
+</body>
+
+</html>
